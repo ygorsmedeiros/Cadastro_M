@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="810.0" prefWidth="1315.0" styleClass="main-bg" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ygor.cadastromestre.HelloController">
+   <children>
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <left>
+            <VBox fx:id="sidebar" alignment="TOP_CENTER" minHeight="0.0" prefWidth="200.0" styleClass="sidebar" BorderPane.alignment="TOP_CENTER">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="110.0" />
+                  <Pane styleClass="sidebar" stylesheets="@styles.css" VBox.vgrow="ALWAYS" />
+                  <Button fx:id="Btn_Base" focusTraversable="false" maxWidth="Infinity" styleClass="btn-sidebar" text="Conectar na Base">
+                     <VBox.margin><Insets bottom="10.0" left="15.0" right="15.0" /></VBox.margin>
+                  </Button>
+                  <Button focusTraversable="false" maxWidth="Infinity" onMouseClicked="#fecharSidebar" styleClass="btn-sidebar-alt" text="Voltar">
+                     <VBox.margin><Insets bottom="30.0" left="15.0" right="15.0" /></VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </left>
+         <top>
+            <HBox alignment="CENTER_RIGHT" prefHeight="70.0" styleClass="sidebar" stylesheets="@styles.css" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Imagem/interface%20(1).png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="BtnMenu" alignment="CENTER" onMouseClicked="#toggleSidebar" styleClass="sidebar-logo" text="Menu">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Calibri" size="12.0" />
+                           </font>
+                           <padding>
+                              <Insets left="2.0" right="2.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="20.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </HBox>
+                  <Pane prefHeight="70.0" prefWidth="609.0" HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ImageView fx:id="BR" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Imagem/round.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <ImageView fx:id="BR1" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Imagem/flag.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <ImageView fx:id="BR2" fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Imagem/chile.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </HBox.margin>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <Button focusTraversable="false" styleClass="btn-sidebar" text="Descrição da sigla" />
+               </children>
+               <padding><Insets right="30.0" /></padding>
+            </HBox>
+         </top>
+         <center>
+            <VBox spacing="20.0" stylesheets="@styles.css" BorderPane.alignment="CENTER">
+               <padding><Insets bottom="30.0" left="30.0" right="30.0" top="30.0" /></padding>
+               <children>
+                  <HBox spacing="25.0" styleClass="main-bg" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="TOP_CENTER" styleClass="card" HBox.hgrow="ALWAYS">
+                           <children>
+                              <ComboBox fx:id="myComboBox1" editable="true" focusTraversable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="84.0" promptText="Pesquise aqui..." styleClass="modern-combo" />
+                              <VBox alignment="CENTER" spacing="10.0" stylesheets="@styles.css" VBox.vgrow="ALWAYS">
+                                 <Label fx:id="Camp1" alignment="CENTER" styleClass="card-title" text=" " />
+                                 <Label fx:id="Camp2" styleClass="card-subtitle" text="  " />
+                                 <Label fx:id="Camp3" styleClass="card-subtitle" text=" Grupo: " />
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefWidth="120.0" styleClass="card" stylesheets="@styles.css" HBox.hgrow="ALWAYS"><children>
+                              <ComboBox fx:id="myComboBox2" editable="true" focusTraversable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="84.0" promptText="Pesquise aqui..." styleClass="modern-combo" /><VBox alignment="CENTER" spacing="10" stylesheets="@styles.css" VBox.vgrow="ALWAYS"><Label styleClass="card-title" text="Escalada" />
+                                 <Label alignment="CENTER" styleClass="card-title" text="Escalada" />
+                                 <Label styleClass="card-subtitle" text="Escalada 1" />
+                                 <Label styleClass="card-subtitle" text="Escalada 2" /></VBox></children></VBox>
+                        <VBox alignment="TOP_CENTER" styleClass="card" HBox.hgrow="ALWAYS"><children>
+                              <ComboBox fx:id="myComboBox3" editable="true" focusTraversable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="84.0" promptText="Pesquise aqui..." styleClass="modern-combo" /><VBox alignment="CENTER" spacing="10" VBox.vgrow="ALWAYS"><Label styleClass="card-title" text="Escalada" />
+                                 <Label alignment="CENTER" styleClass="card-title" text="Escalada" />
+                                 <Label styleClass="card-subtitle" text="Escalada 1" />
+                                 <Label styleClass="card-subtitle" text="Escalada 2" /></VBox></children></VBox>
+                     </children>
+                  </HBox>
+                  <HBox spacing="25.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="TOP_CENTER" styleClass="card" HBox.hgrow="ALWAYS"><children>
+                              <ComboBox fx:id="myComboBox4" editable="true" focusTraversable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="84.0" promptText="Pesquise aqui..." styleClass="modern-combo" /><VBox alignment="CENTER" spacing="10" VBox.vgrow="ALWAYS"><Label styleClass="card-title" text="Escalada" />
+                                 <Label styleClass="card-subtitle" text="Escalada 1" />
+                                 <Label styleClass="card-subtitle" text="Escalada 2" /></VBox></children></VBox>
+                        <VBox alignment="TOP_CENTER" styleClass="card" HBox.hgrow="ALWAYS"><children>
+                              <ComboBox fx:id="myComboBox5" editable="true" focusTraversable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="84.0" promptText="Pesquise aqui..." styleClass="modern-combo" /><VBox alignment="CENTER" spacing="10" VBox.vgrow="ALWAYS"><Label styleClass="card-title" text="Escalada" />
+                                 <Label styleClass="card-subtitle" text="Escalada 1" />
+                                 <Label styleClass="card-subtitle" text="Escalada 2" /></VBox></children></VBox>
+                        <VBox alignment="TOP_CENTER" styleClass="card" HBox.hgrow="ALWAYS"><children>
+                              <ComboBox fx:id="myComboBox6" editable="true" focusTraversable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="84.0" promptText="Pesquise aqui..." styleClass="modern-combo" /><VBox alignment="CENTER" spacing="10" VBox.vgrow="ALWAYS"><Label styleClass="card-title" text="Escalada" />
+                                 <Label styleClass="card-subtitle" text="Escalada 1" />
+                                 <Label styleClass="card-subtitle" text="Escalada 2" /></VBox></children></VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
