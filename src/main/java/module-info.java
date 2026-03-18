@@ -4,5 +4,6 @@ module com.ygor.cadastromestre {
 
 
     opens com.ygor.cadastromestre to javafx.fxml;
+    opens com.ygor.cadastromestre.Controller to javafx.fxml;
     exports com.ygor.cadastromestre;
 }
