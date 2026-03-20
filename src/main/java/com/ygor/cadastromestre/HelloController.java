@@ -6,12 +6,17 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -55,13 +60,14 @@ public class HelloController implements Initializable {
     @FXML
     private void fecharSidebar() {
         if (estendida) {
-            toggleSidebar(); // Só chama a animação se ela estiver aberta
+            toggleSidebar();
         }
     }
 
     @FXML
     private ComboBox<String>  myComboBox2, myComboBox3,
             myComboBox4, myComboBox5, myComboBox6;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

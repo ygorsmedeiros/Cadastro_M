@@ -255,3 +255,35 @@
     -fx-background-color: #dbeafe;
     -fx-text-fill: #1d4ed8;
 }
+.selector-panel {
+    -fx-background-color: #ffffff; /* Ou a cor de fundo do seu card */
+    -fx-background-radius: 5px;
+    /* Adicionar uma sombra ajuda a destacar que ele está 'flutuando' */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+.selector-list {
+    -fx-min-height: 100px;
+    -fx-max-height: 100px;
+}
+
+/* Força os cards a manterem o alinhamento mesmo com textos diferentes */
+.card {
+    -fx-background-color: #ffffff;
+    -fx-min-width: 350px;
+    -fx-max-width: 450px;
+    -fx-padding: 16;
+}
+
+/* Estilo para as linhas de pessoas para evitar quebras bruscas */
+.person-line {
+    -fx-min-height: 20px;
+    -fx-max-height: 45px; /* Permite até duas linhas sem explodir o card */
+    -fx-font-size: 11px;
+}
+
+/* Impede que o botão de seleção mude de tamanho no foco */
+.selector-button {
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+}

@@ -8,11 +8,15 @@ import com.ygor.cadastromestre.service.CadastroMestreService;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -25,9 +29,14 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -279,6 +288,31 @@ public class CadastroMestreController implements Initializable {
     @FXML
     private Label serviceNotesLabel;
 
+    @FXML
+    private BorderPane Bord_root_pane;
+
+    @FXML
+    public void DescSigla() {
+        try {
+            FXMLLoader loader = new FXMLLoader(DescriptorSigla.class.getResource("/com/ygor/cadastromestre/DescriptorSigla.fxml"));
+            Parent sidebarDireita = loader.load();
+
+            Bord_root_pane.setRight(sidebarDireita);
+
+            sidebarDireita.setTranslateX(400);
+            TranslateTransition transition = new TranslateTransition(Duration.millis(300), sidebarDireita);
+            transition.setToX(0);
+            transition.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+            transition.play();
+
+        } catch (IOException e) {
+            System.err.println("Erro ao carregar a Sidebar: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+
     private boolean sidebarExpanded = true;
 
     private enum FlowCategory {
@@ -333,6 +367,7 @@ public class CadastroMestreController implements Initializable {
         configureFlowAssistant();
         applyCountryFilter(CountryFilter.BR);
         rootPane.addEventFilter(MouseEvent.MOUSE_PRESSED, this::closeSelectorWhenClickingOutside);
+
     }
 
     @FXML

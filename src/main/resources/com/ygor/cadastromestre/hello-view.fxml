@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
@@ -12,267 +13,369 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="810.0" prefWidth="1315.0" styleClass="main-bg" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ygor.cadastromestre.Controller.CadastroMestreController">
+<AnchorPane fx:id="rootPane" prefHeight="810.0" prefWidth="1315.0" styleClass="main-bg" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ygor.cadastromestre.Controller.CadastroMestreController">
    <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-            <VBox fx:id="sidebar" alignment="TOP_CENTER" minHeight="0.0" prefWidth="200.0" styleClass="sidebar" BorderPane.alignment="TOP_CENTER">
-               <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" />
-                  <Pane VBox.vgrow="ALWAYS" />
-                  <Button focusTraversable="false" maxWidth="Infinity" styleClass="btn-sidebar" text="Conectar na Base">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="15.0" right="15.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button focusTraversable="false" maxWidth="Infinity" onMouseClicked="#fecharSidebar" styleClass="btn-sidebar-alt" text="Voltar">
-                     <VBox.margin>
-                        <Insets bottom="30.0" left="15.0" right="15.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-         </left>
-         <top>
-            <HBox alignment="CENTER_RIGHT" prefHeight="78.0" styleClass="topbar" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox alignment="CENTER" spacing="8.0">
+      <StackPane  alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane fx:id="Bord_root_pane" style="-fx-background-color: transparent;">
+               <left>
+                  <VBox fx:id="sidebar" alignment="TOP_CENTER" minHeight="0.0" prefHeight="748.0" prefWidth="164.0" styleClass="sidebar" BorderPane.alignment="TOP_CENTER">
                      <children>
-                        <ImageView fitHeight="38.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@Imagem/interface%20(1).png" />
-                           </image>
-                        </ImageView>
-                        <Label alignment="CENTER" onMouseClicked="#toggleSidebar" styleClass="sidebar-logo" text="Menu" />
-                     </children>
-                     <HBox.margin>
-                        <Insets left="20.0" right="12.0" />
-                     </HBox.margin>
-                  </HBox>
-                  <Pane HBox.hgrow="ALWAYS" />
-                  <Label fx:id="countryActiveLabel" styleClass="country-active-label" text="Filtro ativo: Brasil">
-                     <HBox.margin>
-                        <Insets right="16.0" />
-                     </HBox.margin>
-                  </Label>
-                  <HBox alignment="CENTER" spacing="8.0" styleClass="country-filter-box">
-                     <children>
-                        <ToggleButton fx:id="countryBrButton" contentDisplay="LEFT" focusTraversable="false" styleClass="country-btn" text="BR">
-                           <graphic>
-                              <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@Imagem/round.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </ToggleButton>
-                        <ToggleButton fx:id="countryArgButton" contentDisplay="LEFT" focusTraversable="false" styleClass="country-btn" text="ARG">
-                           <graphic>
-                              <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@Imagem/flag.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </ToggleButton>
-                        <ToggleButton fx:id="countryChlButton" contentDisplay="LEFT" focusTraversable="false" styleClass="country-btn" text="CHL">
-                           <graphic>
-                              <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@Imagem/chile.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </ToggleButton>
-                     </children>
-                     <HBox.margin>
-                        <Insets right="20.0" />
-                     </HBox.margin>
-                  </HBox>
-                  <Button focusTraversable="false" styleClass="btn-sidebar" text="Descricao da sigla" />
-               </children>
-               <padding>
-                  <Insets right="30.0" />
-               </padding>
-            </HBox>
-         </top>
-         <center>
-            <VBox spacing="18.0" BorderPane.alignment="CENTER">
-               <padding>
-                  <Insets bottom="22.0" left="24.0" right="24.0" top="22.0" />
-               </padding>
-               <children>
-                  <VBox spacing="10.0" styleClass="flow-assistant">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0">
-                           <children>
-                              <Label styleClass="flow-title" text="Quem acionar?" />
-                              <Label fx:id="flowStatusLabel" styleClass="flow-status" text="Selecione categoria e contexto." />
-                           </children>
-                        </HBox>
-                        <HBox spacing="12.0">
-                           <children>
-                              <VBox spacing="6.0" styleClass="flow-block" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="flow-label" text="Categoria" />
-                                    <Button fx:id="flowCategorySelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                                    <VBox fx:id="flowCategorySelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                       <children>
-                                          <TextField fx:id="flowCategorySearchField" promptText="Buscar categoria..." styleClass="selector-search" />
-                                          <ListView fx:id="flowCategoryListView" prefHeight="120.0" styleClass="selector-list" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </VBox>
-                              <VBox spacing="6.0" styleClass="flow-block" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="flow-label" text="Sistema / Servico" />
-                                    <Button fx:id="flowContextSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                                    <VBox fx:id="flowContextSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                       <children>
-                                          <TextField fx:id="flowContextSearchField" promptText="Buscar contexto..." styleClass="selector-search" />
-                                          <ListView fx:id="flowContextListView" prefHeight="120.0" styleClass="selector-list" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </VBox>
-                              <VBox spacing="8.0" styleClass="flow-result" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label fx:id="flowCurrentRoleLabel" styleClass="flow-role" text="Papel atual: -" />
-                                    <Label fx:id="flowResponsibleLabel" styleClass="card-subtitle person-line" text="Responsavel: -" wrapText="true" />
-                                    <HBox spacing="8.0">
-                                       <children>
-                                          <Button fx:id="flowEscalateButton" onAction="#escalateFlowOnce" styleClass="flow-action-btn" text="Escalar para Lider" />
-                                          <Button fx:id="flowResetButton" onAction="#resetFlowEscalation" styleClass="flow-action-btn-alt" text="Resetar" />
-                                       </children>
-                                    </HBox>
-                                    <HBox spacing="8.0">
-                                       <children>
-                                          <Button fx:id="flowCopyContactButton" onAction="#copyCurrentContact" styleClass="flow-action-btn" text="Copiar contato" />
-                                          <Button fx:id="flowCopyPhoneButton" onAction="#copyCurrentPhone" styleClass="flow-action-btn-alt" text="Copiar telefone" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" />
+                        <Pane prefHeight="535.0" prefWidth="163.0" VBox.vgrow="ALWAYS" />
+                        <Button focusTraversable="false" maxWidth="Infinity" prefHeight="35.0" prefWidth="75.0" styleClass="btn-sidebar" text="Conectar na Base">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="15.0" right="15.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button focusTraversable="false" maxWidth="Infinity" onMouseClicked="#fecharSidebar" styleClass="btn-sidebar-alt" text="Voltar">
+                           <VBox.margin>
+                              <Insets bottom="30.0" left="15.0" right="15.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                   </VBox>
-                  <HBox spacing="18.0" VBox.vgrow="ALWAYS">
+               </left>
+               <top>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="62.0" prefWidth="1334.0" styleClass="topbar" BorderPane.alignment="CENTER">
                      <children>
-                        <VBox alignment="TOP_LEFT" spacing="8.0" styleClass="card" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER" spacing="8.0">
                            <children>
-                              <Label styleClass="card-title" text="Equipe CCS" />
-                              <Button fx:id="ccsSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                              <VBox fx:id="ccsSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                 <children>
-                                    <TextField fx:id="ccsSearchField" promptText="Buscar..." styleClass="selector-search" />
-                                    <ListView fx:id="ccsListView" prefHeight="136.0" styleClass="selector-list" />
-                                 </children>
-                              </VBox>
-                              <Label fx:id="ccsHeadLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="ccsLeaderLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="ccsFocalLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="ccsFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="ccsTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                              <ImageView fitHeight="38.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@Imagem/interface%20(1).png" />
+                                 </image>
+                              </ImageView>
+                              <Label alignment="CENTER" onMouseClicked="#toggleSidebar" styleClass="sidebar-logo" text="Menu" />
                            </children>
-                        </VBox>
-                        <VBox alignment="TOP_LEFT" spacing="8.0" styleClass="card" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets left="20.0" right="12.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <Pane prefHeight="61.0" prefWidth="620.0" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="countryActiveLabel" styleClass="country-active-label" text="Filtro ativo: Brasil">
+                           <HBox.margin>
+                              <Insets right="16.0" />
+                           </HBox.margin>
+                        </Label>
+                        <HBox alignment="CENTER" spacing="8.0" styleClass="country-filter-box">
                            <children>
-                              <Label styleClass="card-title" text="Equipe GIM" />
-                              <Button fx:id="gimSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                              <VBox fx:id="gimSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                 <children>
-                                    <TextField fx:id="gimSearchField" promptText="Buscar..." styleClass="selector-search" />
-                                    <ListView fx:id="gimListView" prefHeight="136.0" styleClass="selector-list" />
-                                 </children>
-                              </VBox>
-                              <Label fx:id="gimHeadLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="gimLeaderLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="gimFocalLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="gimFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="gimTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                              <ToggleButton fx:id="countryBrButton" contentDisplay="LEFT" focusTraversable="false" styleClass="country-btn" text="BR">
+                                 <graphic>
+                                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@Imagem/round.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="countryArgButton" contentDisplay="LEFT" focusTraversable="false" styleClass="country-btn" text="ARG">
+                                 <graphic>
+                                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@Imagem/flag.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </ToggleButton>
+                              <ToggleButton fx:id="countryChlButton" contentDisplay="LEFT" focusTraversable="false" styleClass="country-btn" text="CHL">
+                                 <graphic>
+                                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@Imagem/chile.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </ToggleButton>
                            </children>
-                        </VBox>
-                        <VBox alignment="TOP_LEFT" spacing="8.0" styleClass="card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label styleClass="card-title" text="Suporte Tecnico" />
-                              <Button fx:id="supportSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                              <VBox fx:id="supportSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                 <children>
-                                    <TextField fx:id="supportSearchField" promptText="Buscar..." styleClass="selector-search" />
-                                    <ListView fx:id="supportListView" prefHeight="136.0" styleClass="selector-list" />
-                                 </children>
-                              </VBox>
-                              <Label fx:id="supportHeadLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="supportLeaderLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="supportFocalLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="supportFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="supportTowerLabel" styleClass="card-subtitle" wrapText="true" />
-                           </children>
-                        </VBox>
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <Button fx:id="Sigla" focusTraversable="false" onAction="#DescSigla" styleClass="btn-sidebar" text="Descricao da sigla" />
                      </children>
+                     <padding>
+                        <Insets right="30.0" />
+                     </padding>
                   </HBox>
-                  <HBox spacing="18.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <VBox alignment="TOP_LEFT" spacing="8.0" styleClass="card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label styleClass="card-title" text="Aplicacao" />
-                              <Button fx:id="applicationSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                              <VBox fx:id="applicationSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                 <children>
-                                    <TextField fx:id="applicationSearchField" promptText="Buscar..." styleClass="selector-search" />
-                                    <ListView fx:id="applicationListView" prefHeight="136.0" styleClass="selector-list" />
-                                 </children>
-                              </VBox>
-                              <Label fx:id="applicationHeadLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="applicationLeaderLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="applicationFocalLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="applicationFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="applicationTowerLabel" styleClass="card-subtitle" wrapText="true" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="TOP_LEFT" spacing="8.0" styleClass="card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label styleClass="card-title" text="Engenharia" />
-                              <Button fx:id="engineeringSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                              <VBox fx:id="engineeringSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                 <children>
-                                    <TextField fx:id="engineeringSearchField" promptText="Buscar..." styleClass="selector-search" />
-                                    <ListView fx:id="engineeringListView" prefHeight="136.0" styleClass="selector-list" />
-                                 </children>
-                              </VBox>
-                              <Label fx:id="engineeringHeadLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="engineeringLeaderLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="engineeringFocalLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="engineeringFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="engineeringTowerLabel" styleClass="card-subtitle" wrapText="true" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="TOP_LEFT" spacing="8.0" styleClass="card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label styleClass="card-title" text="Busca por Servicos" />
-                              <Button fx:id="serviceSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
-                              <VBox fx:id="serviceSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
-                                 <children>
-                                    <TextField fx:id="serviceSearchField" promptText="Buscar..." styleClass="selector-search" />
-                                    <ListView fx:id="serviceListView" prefHeight="136.0" styleClass="selector-list" />
-                                 </children>
-                              </VBox>
-                              <Label fx:id="serviceNameLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="serviceSpecialistLabel" styleClass="card-subtitle person-line" wrapText="true" />
-                              <Label fx:id="serviceFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="serviceTowerLabel" styleClass="card-subtitle" wrapText="true" />
-                              <Label fx:id="serviceNotesLabel" styleClass="card-subtitle" wrapText="true" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </center>
-      </BorderPane>
+               </top>
+               <center>
+      <!--            Scrollpane-->
+                  <ScrollPane fitToWidth="true">
+
+                     <VBox spacing="2.0" BorderPane.alignment="CENTER">
+                        <padding>
+                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        </padding>
+                        <children>
+                           <VBox spacing="2.0" styleClass="flow-assistant">
+                              <children>
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                    <children>
+                                       <Label styleClass="flow-title" text="Quem acionar?" />
+                                       <Label fx:id="flowStatusLabel" styleClass="flow-status" text="Selecione categoria e contexto." />
+                                    </children>
+                                 </HBox>
+                                 <HBox spacing="12.0">
+                                    <children>
+                                       <VBox spacing="6.0" styleClass="flow-block" HBox.hgrow="ALWAYS">
+                                          <children>
+                                             <Label styleClass="flow-label" text="Categoria" />
+                                             <Button fx:id="flowCategorySelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                             <VBox fx:id="flowCategorySelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="flowCategorySearchField" promptText="Buscar categoria..." styleClass="selector-search" />
+                                                   <ListView fx:id="flowCategoryListView" prefHeight="120.0" styleClass="selector-list" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </VBox>
+                                       <VBox spacing="6.0" styleClass="flow-block" HBox.hgrow="ALWAYS">
+                                          <children>
+                                             <Label styleClass="flow-label" text="Sistema / Servico" />
+                                             <Button fx:id="flowContextSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                             <VBox fx:id="flowContextSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="flowContextSearchField" promptText="Buscar contexto..." styleClass="selector-search" />
+                                                   <ListView fx:id="flowContextListView" prefHeight="120.0" styleClass="selector-list" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </VBox>
+                                       <VBox spacing="8.0" styleClass="flow-result" HBox.hgrow="ALWAYS">
+                                          <children>
+                                             <Label fx:id="flowCurrentRoleLabel" styleClass="flow-role" text="Papel atual: -" />
+                                             <Label fx:id="flowResponsibleLabel" styleClass="card-subtitle person-line" text="Responsavel: -" wrapText="true" />
+                                             <HBox spacing="8.0">
+                                                <children>
+                                                   <Button fx:id="flowEscalateButton" onAction="#escalateFlowOnce" styleClass="flow-action-btn" text="Escalar para Lider" />
+                                                   <Button fx:id="flowResetButton" onAction="#resetFlowEscalation" styleClass="flow-action-btn-alt" text="Resetar" />
+                                                </children>
+                                             </HBox>
+                                             <HBox spacing="8.0">
+                                                <children>
+                                                   <Button fx:id="flowCopyContactButton" onAction="#copyCurrentContact" styleClass="flow-action-btn" text="Copiar contato" />
+                                                   <Button fx:id="flowCopyPhoneButton" onAction="#copyCurrentPhone" styleClass="flow-action-btn-alt" text="Copiar telefone" />
+                                                </children>
+                                             </HBox>
+                                          </children>
+                                       </VBox>
+                                    </children>
+                                 </HBox>
+                              </children>
+                              <VBox.margin>
+                                 <Insets bottom="10.0" left="5.0" top="10.0" />
+                              </VBox.margin>
+                           </VBox>
+
+                           <TilePane fx:id="cardsTilePane" tileAlignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                              <children>
+                                 <VBox alignment="TOP_LEFT" prefHeight="300.0" prefWidth="600.0" spacing="3.0" styleClass="card" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label styleClass="card-title" text="Equipe CCS" />
+                                       <Button fx:id="ccsSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                       <StackPane alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                                          <children>
+                                             <VBox spacing="8.0">
+                                                <children>
+                                                   <Label fx:id="ccsHeadLabel" styleClass="card-subtitle person-line" wrapText="true" />
+                                                   <Label fx:id="ccsLeaderLabel" styleClass="card-subtitle person-line" wrapText="true" />
+                                                   <Label fx:id="ccsFocalLabel" styleClass="card-subtitle person-line" wrapText="true" />
+                                                   <Label fx:id="ccsFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="ccsTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                                                </children>
+                                             </VBox>
+                                             <VBox fx:id="ccsSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="ccsSearchField" minHeight="30.0" promptText="Buscar..." styleClass="selector-search" />
+                                                   <ListView fx:id="ccsListView" prefHeight="200.0" styleClass="selector-list" VBox.vgrow="ALWAYS" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </StackPane>
+                                    </children>
+                                    <TilePane.margin>
+                                       <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+                                    </TilePane.margin>
+                                    <padding>
+                                       <Insets left="2.0" />
+                                    </padding>
+                                 </VBox>
+
+                                 <VBox alignment="TOP_LEFT" prefHeight="300.0" prefWidth="600.0" spacing="3.0" styleClass="card" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label styleClass="card-title" text="Equipe GIM" />
+                                       <Button fx:id="gimSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                       <StackPane alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                                          <children>
+                                             <VBox spacing="8.0">
+                                                <children>
+                                                   <Label fx:id="gimHeadLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="gimLeaderLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="gimFocalLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="gimFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="gimTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                                                </children>
+                                             </VBox>
+                                             <VBox fx:id="gimSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="gimSearchField" promptText="Buscar..." styleClass="selector-search" />
+                                                   <ListView fx:id="gimListView" prefHeight="200.0" styleClass="selector-list" VBox.vgrow="ALWAYS" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </StackPane>
+                                    </children>
+                                    <TilePane.margin>
+                                       <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+                                    </TilePane.margin>
+                                    <padding>
+                                       <Insets left="2.0" />
+                                    </padding>
+                                 </VBox>
+
+                                 <VBox alignment="TOP_LEFT" prefHeight="300.0" prefWidth="600.0" spacing="3.0" styleClass="card" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label styleClass="card-title" text="Suporte Tecnico" />
+                                       <Button fx:id="supportSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                       <StackPane alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                                          <children>
+                                             <VBox spacing="8.0">
+                                                <children>
+                                                   <Label fx:id="supportHeadLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="supportLeaderLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="supportFocalLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="supportFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="supportTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                                                </children>
+                                             </VBox>
+                                             <VBox fx:id="supportSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="supportSearchField" promptText="Buscar..." styleClass="selector-search" />
+                                                   <ListView fx:id="supportListView" prefHeight="200.0" styleClass="selector-list" VBox.vgrow="ALWAYS" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </StackPane>
+                                    </children>
+                                    <TilePane.margin>
+                                       <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+                                    </TilePane.margin>
+                                    <padding>
+                                       <Insets left="2.0" />
+                                    </padding>
+                                 </VBox>
+
+                                 <VBox alignment="TOP_LEFT" prefHeight="300.0" prefWidth="600.0" spacing="3.0" styleClass="card" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label styleClass="card-title" text="Aplicacao" />
+                                       <Button fx:id="applicationSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                       <StackPane alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                                          <children>
+                                             <VBox spacing="8.0">
+                                                <children>
+                                                   <Label fx:id="applicationHeadLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="applicationLeaderLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="applicationFocalLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="applicationFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="applicationTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                                                </children>
+                                             </VBox>
+                                             <VBox fx:id="applicationSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="applicationSearchField" promptText="Buscar..." styleClass="selector-search" />
+                                                   <ListView fx:id="applicationListView" prefHeight="200.0" styleClass="selector-list" VBox.vgrow="ALWAYS" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </StackPane>
+                                    </children>
+                                    <TilePane.margin>
+                                       <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+                                    </TilePane.margin>
+                                    <padding>
+                                       <Insets left="2.0" />
+                                    </padding>
+                                 </VBox>
+
+                                 <VBox alignment="TOP_LEFT" prefHeight="300.0" prefWidth="600.0" spacing="3.0" styleClass="card" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label styleClass="card-title" text="Engenharia" />
+                                       <Button fx:id="engineeringSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                       <StackPane alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                                          <children>
+                                             <VBox spacing="8.0">
+                                                <children>
+                                                   <Label fx:id="engineeringHeadLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="engineeringLeaderLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="engineeringFocalLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="engineeringFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="engineeringTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                                                </children>
+                                             </VBox>
+                                             <VBox fx:id="engineeringSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="engineeringSearchField" promptText="Buscar..." styleClass="selector-search" />
+                                                   <ListView fx:id="engineeringListView" prefHeight="200.0" styleClass="selector-list" VBox.vgrow="ALWAYS" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </StackPane>
+                                    </children>
+                                    <TilePane.margin>
+                                       <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+                                    </TilePane.margin>
+                                    <padding>
+                                       <Insets left="2.0" />
+                                    </padding>
+                                 </VBox>
+
+                                 <VBox alignment="TOP_LEFT" prefHeight="300.0" prefWidth="600.0" spacing="3.0" styleClass="card" VBox.vgrow="ALWAYS">
+                                    <children>
+                                       <Label styleClass="card-title" text="Busca por Servicos" />
+                                       <Button fx:id="serviceSelectButton" maxWidth="Infinity" styleClass="selector-button" text="Selecionar..." />
+                                       <StackPane alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                                          <children>
+                                             <VBox spacing="8.0">
+                                                <children>
+                                                   <Label fx:id="serviceNameLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="serviceSpecialistLabel" maxWidth="Infinity" styleClass="card-subtitle person-line" textOverrun="ELLIPSIS" wrapText="true" />
+                                                   <Label fx:id="serviceFastcomnsLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="serviceTowerLabel" styleClass="card-subtitle" wrapText="true" />
+                                                   <Label fx:id="serviceNotesLabel" styleClass="card-subtitle" wrapText="true" />
+                                                </children>
+                                             </VBox>
+                                             <VBox fx:id="serviceSelectPanel" managed="false" spacing="6.0" styleClass="selector-panel" visible="false">
+                                                <children>
+                                                   <TextField fx:id="serviceSearchField" promptText="Buscar..." styleClass="selector-search" />
+                                                   <ListView fx:id="serviceListView" prefHeight="200.0" styleClass="selector-list" VBox.vgrow="ALWAYS" />
+                                                </children>
+                                             </VBox>
+                                          </children>
+                                       </StackPane>
+                                    </children>
+                                    <TilePane.margin>
+                                       <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+                                    </TilePane.margin>
+                                    <padding>
+                                       <Insets left="2.0" />
+                                    </padding>
+                                 </VBox>
+                              </children>
+                              <VBox.margin>
+                                 <Insets left="5.0" top="5.0" />
+                              </VBox.margin>
+                           </TilePane>
+                        </children>
+                     </VBox>
+                  </ScrollPane>
+               </center>
+            </BorderPane>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

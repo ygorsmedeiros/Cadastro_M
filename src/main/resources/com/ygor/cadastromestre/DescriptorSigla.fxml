@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="600.0" prefWidth="400.0" styleClass="main-bg" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ygor.cadastromestre.Controller.DescriptorSigla">
+   <children>
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+         <top>
+            <VBox alignment="CENTER" spacing="10.0" styleClass="topbar">
+               <children>
+                  <Label styleClass="sidebar-logo" text="DESCRIÇÃO DA SIGLA" />
+
+                  <VBox alignment="CENTER_LEFT" prefHeight="70.0" styleClass="card">
+                     <children>
+                        <Label fx:id="labelDescricaoDinamica" prefWidth="340.0" styleClass="card-subtitle" text="Informações contextuais do sistema que serão carregadas dinamicamente." wrapText="true" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="10.0" />
+               </padding>
+            </VBox>
+         </top>
+
+         <center>
+            <VBox spacing="15.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               <children>
+
+                  <VBox alignment="TOP_CENTER" spacing="12.0" styleClass="card">
+                     <children>
+                        <Label styleClass="card-title" text="Horário de Funcionamento" />
+
+                        <HBox alignment="CENTER" spacing="15.0">
+                           <children>
+                              <VBox alignment="CENTER" prefWidth="150.0" spacing="5.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10;">
+                                 <children>
+                                    <Label styleClass="card-subtitle" text="Seg - Sex" />
+                                    <Label fx:id="H_Fun" styleClass="flow-label" text="08:00 - 18:00" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="8.0" top="8.0" />
+                                 </padding>
+                              </VBox>
+
+                              <VBox alignment="CENTER" prefWidth="150.0" spacing="5.0" style="-fx-background-color: #f8fafc; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10;">
+                                 <children>
+                                    <Label styleClass="card-subtitle" text="Final de Semana" />
+                                    <Label fx:id="Fds_Hora" style="-fx-text-fill: #ef4444;" styleClass="flow-label" text="Fechado" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="8.0" top="8.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+                  <VBox spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="card-title" text="Super Usuário Responsável" />
+                        <Button fx:id="btnSelecionarUsuario" maxWidth="Infinity" styleClass="selector-button" text="Selecionar Usuário..." />
+
+                        <StackPane VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox fx:id="painelInfoUsuario" spacing="8.0">
+                                 <children>
+                                    <Label fx:id="labelNomeUsuario" styleClass="card-subtitle, person-line" text="Nenhum selecionado" wrapText="true" />
+                                    <Label styleClass="flow-status" text="Clique acima para alterar." />
+                                 </children>
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </VBox>
+
+                              <VBox fx:id="painelBuscaUsuario" managed="false" spacing="8.0" styleClass="selector-panel" visible="false">
+                                 <children>
+                                    <TextField fx:id="txtBuscaUsuario" promptText="Buscar por nome..." styleClass="selector-search" />
+                                    <ListView fx:id="listUsuarios" prefHeight="200.0" styleClass="selector-list" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </center>
+         <bottom>
+            <HBox alignment="CENTER" prefHeight="70.0">
+               <children>
+                  <Button fx:id="btnFechar" onAction="#fecharJanela" prefWidth="250.0" styleClass="btn-sidebar" text="FECHAR" />
+               </children>
+            </HBox>
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>
