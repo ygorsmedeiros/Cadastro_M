@@ -14,13 +14,18 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -30,7 +35,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -40,13 +45,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class CadastroMestreController implements Initializable {
 
@@ -62,6 +71,9 @@ public class CadastroMestreController implements Initializable {
     private PersonContact currentFlowPerson;
     private EscalationContact currentFlowEscalationContact;
     private ServiceContact currentFlowServiceContact;
+    private final Map<String, EscalationContact> cardEscalationContacts = new java.util.HashMap<>();
+    private final Map<String, ServiceContact> cardServiceContacts = new java.util.HashMap<>();
+    private ContextMenu activeHoverCopyMenu;
 
     @FXML
     private AnchorPane rootPane;
@@ -311,6 +323,159 @@ public class CadastroMestreController implements Initializable {
         }
     }
 
+    @FXML
+    private void openConsultaSuperUsuario() {
+        showConsultaWindow(
+                "Consulta Super Usuario",
+                "Consulta consolidada de contatos principais por contexto.",
+                buildSuperUsuarioRows()
+        );
+    }
+
+    @FXML
+    private void openConsultaGpoRpo() {
+        showConsultaWindow(
+                "Consulta GPO e RPO",
+                "Consulta dos responsaveis de contingencia (GPO/RPO) por contexto.",
+                buildGpoRpoRows()
+        );
+    }
+
+    @FXML
+    private void openConsultaExtra() {
+        showConsultaWindow(
+                "Consulta Extra",
+                "Tela adicional de consulta para o terceiro fluxo.",
+                buildExtraRows()
+        );
+    }
+
+    private void showConsultaWindow(String title, String description, List<String> rows) {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        if (rootPane != null && rootPane.getScene() != null) {
+            stage.initOwner(rootPane.getScene().getWindow());
+        }
+        stage.setTitle(title);
+
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("card-title");
+
+        Label descriptionLabel = new Label(description);
+        descriptionLabel.getStyleClass().add("flow-status");
+        descriptionLabel.setWrapText(true);
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Buscar na consulta...");
+        searchField.getStyleClass().add("selector-search");
+
+        ListView<String> listView = new ListView<>();
+        listView.getStyleClass().add("selector-list");
+        listView.setPrefHeight(280);
+
+        Runnable refreshRows = () -> {
+            String query = searchField.getText() == null
+                    ? ""
+                    : searchField.getText().toLowerCase(Locale.ROOT).trim();
+            List<String> filtered = rows.stream()
+                    .filter(row -> row.toLowerCase(Locale.ROOT).contains(query))
+                    .toList();
+            listView.setItems(FXCollections.observableArrayList(filtered));
+        };
+        refreshRows.run();
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> refreshRows.run());
+
+        Button copySelectedButton = new Button("Copiar Selecionado");
+        copySelectedButton.getStyleClass().add("top-action-btn");
+        copySelectedButton.setOnAction(event -> {
+            String selected = listView.getSelectionModel().getSelectedItem();
+            if (selected != null && !selected.isBlank()) {
+                copyToClipboard(selected);
+            }
+        });
+
+        Button closeButton = new Button("Fechar");
+        closeButton.getStyleClass().add("btn-sidebar-alt");
+        closeButton.setOnAction(event -> stage.close());
+
+        HBox actions = new HBox(8.0, copySelectedButton, closeButton);
+        actions.setAlignment(Pos.CENTER_RIGHT);
+
+        VBox content = new VBox(10.0, titleLabel, descriptionLabel, searchField, listView, actions);
+        content.getStyleClass().add("consulta-dialog");
+        content.setPadding(new Insets(16.0));
+
+        Scene scene = new Scene(content, 760, 500);
+        URL styleUrl = getClass().getResource("/com/ygor/cadastromestre/styles.css");
+        if (styleUrl != null) {
+            scene.getStylesheets().add(styleUrl.toExternalForm());
+        }
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private List<String> buildSuperUsuarioRows() {
+        Set<String> rows = new LinkedHashSet<>();
+        collectEscalationRows(rows, "CCS", service.getCcsOptions(activeCountry), service::findCcsEscalation, EscalationContact::pointOfContact);
+        collectEscalationRows(rows, "GIM", service.getGimOptions(activeCountry), service::findGimEscalation, EscalationContact::pointOfContact);
+        collectEscalationRows(rows, "SUPORTE", service.getSupportOptions(activeCountry), service::findSupportEscalation, EscalationContact::pointOfContact);
+        collectEscalationRows(rows, "APLICACAO", service.getApplicationOptions(activeCountry), service::findApplicationEscalation, EscalationContact::pointOfContact);
+        collectEscalationRows(rows, "ENGENHARIA", service.getEngineeringOptions(activeCountry), service::findEngineeringEscalation, EscalationContact::pointOfContact);
+
+        for (String option : service.getServiceOptions(activeCountry)) {
+            ServiceContact contact = service.findServiceEscalation(activeCountry, option);
+            if (contact != null) {
+                rows.add(String.format("SERVICO | %s | %s", option, formatPersonSummary(contact.specialist())));
+            }
+        }
+        return new ArrayList<>(rows);
+    }
+
+    private List<String> buildGpoRpoRows() {
+        List<String> rows = new ArrayList<>();
+        collectEscalationRows(rows, "GPO", service.getSupportOptions(activeCountry), service::findSupportEscalation, EscalationContact::leader);
+        collectEscalationRows(rows, "RPO", service.getSupportOptions(activeCountry), service::findSupportEscalation, EscalationContact::head);
+        collectEscalationRows(rows, "GPO", service.getEngineeringOptions(activeCountry), service::findEngineeringEscalation, EscalationContact::leader);
+        collectEscalationRows(rows, "RPO", service.getEngineeringOptions(activeCountry), service::findEngineeringEscalation, EscalationContact::head);
+        return rows;
+    }
+
+    private List<String> buildExtraRows() {
+        List<String> rows = new ArrayList<>();
+        for (String option : service.getServiceOptions(activeCountry)) {
+            ServiceContact contact = service.findServiceEscalation(activeCountry, option);
+            if (contact != null) {
+                rows.add(String.format(
+                        "%s | Grupo Fastcomns: %s | Torre: %s | Observacao: %s",
+                        option,
+                        contact.fastcomnsGroup(),
+                        contact.assignmentTower(),
+                        contact.notes()
+                ));
+            }
+        }
+        return rows;
+    }
+
+    private void collectEscalationRows(
+            java.util.Collection<String> target,
+            String prefix,
+            List<String> options,
+            BiFunction<CountryFilter, String, EscalationContact> finder,
+            Function<EscalationContact, PersonContact> personExtractor
+    ) {
+        for (String option : options) {
+            EscalationContact contact = finder.apply(activeCountry, option);
+            if (contact == null) {
+                continue;
+            }
+
+            PersonContact person = personExtractor.apply(contact);
+            target.add(String.format("%s | %s | %s", prefix, option, formatPersonSummary(person)));
+        }
+    }
+
 
 
     private boolean sidebarExpanded = true;
@@ -364,7 +529,7 @@ public class CadastroMestreController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         configureCountryFilter();
         configureSelectors();
-        configureFlowAssistant();
+        configureHoverCopyMenus();
         applyCountryFilter(CountryFilter.BR);
         rootPane.addEventFilter(MouseEvent.MOUSE_PRESSED, this::closeSelectorWhenClickingOutside);
 
@@ -418,7 +583,7 @@ public class CadastroMestreController implements Initializable {
                 ccsSelectButton, ccsSelectPanel, ccsSearchField, ccsListView,
                 service::getCcsOptions,
                 service::findCcsEscalation,
-                contact -> updateEscalationLabels(contact, ccsHeadLabel, ccsLeaderLabel, ccsFocalLabel, ccsFastcomnsLabel, ccsTowerLabel),
+                contact -> updateEscalationLabels("ccs", contact, ccsHeadLabel, ccsLeaderLabel, ccsFocalLabel, ccsFastcomnsLabel, ccsTowerLabel),
                 true
         ));
 
@@ -426,7 +591,7 @@ public class CadastroMestreController implements Initializable {
                 gimSelectButton, gimSelectPanel, gimSearchField, gimListView,
                 service::getGimOptions,
                 service::findGimEscalation,
-                contact -> updateEscalationLabels(contact, gimHeadLabel, gimLeaderLabel, gimFocalLabel, gimFastcomnsLabel, gimTowerLabel),
+                contact -> updateEscalationLabels("gim", contact, gimHeadLabel, gimLeaderLabel, gimFocalLabel, gimFastcomnsLabel, gimTowerLabel),
                 false
         ));
 
@@ -434,7 +599,7 @@ public class CadastroMestreController implements Initializable {
                 supportSelectButton, supportSelectPanel, supportSearchField, supportListView,
                 service::getSupportOptions,
                 service::findSupportEscalation,
-                contact -> updateEscalationLabels(contact, supportHeadLabel, supportLeaderLabel, supportFocalLabel, supportFastcomnsLabel, supportTowerLabel),
+                contact -> updateEscalationLabels("support", contact, supportHeadLabel, supportLeaderLabel, supportFocalLabel, supportFastcomnsLabel, supportTowerLabel),
                 false
         ));
 
@@ -442,7 +607,7 @@ public class CadastroMestreController implements Initializable {
                 applicationSelectButton, applicationSelectPanel, applicationSearchField, applicationListView,
                 service::getApplicationOptions,
                 service::findApplicationEscalation,
-                contact -> updateEscalationLabels(contact, applicationHeadLabel, applicationLeaderLabel, applicationFocalLabel, applicationFastcomnsLabel, applicationTowerLabel),
+                contact -> updateEscalationLabels("application", contact, applicationHeadLabel, applicationLeaderLabel, applicationFocalLabel, applicationFastcomnsLabel, applicationTowerLabel),
                 false
         ));
 
@@ -450,7 +615,7 @@ public class CadastroMestreController implements Initializable {
                 engineeringSelectButton, engineeringSelectPanel, engineeringSearchField, engineeringListView,
                 service::getEngineeringOptions,
                 service::findEngineeringEscalation,
-                contact -> updateEscalationLabels(contact, engineeringHeadLabel, engineeringLeaderLabel, engineeringFocalLabel, engineeringFastcomnsLabel, engineeringTowerLabel),
+                contact -> updateEscalationLabels("engineering", contact, engineeringHeadLabel, engineeringLeaderLabel, engineeringFocalLabel, engineeringFastcomnsLabel, engineeringTowerLabel),
                 false
         ));
 
@@ -462,6 +627,130 @@ public class CadastroMestreController implements Initializable {
         ));
 
         selectors.forEach(this::setupSelectorBehavior);
+    }
+
+    private void configureHoverCopyMenus() {
+        configureEscalationHoverCopy("ccs", ccsHeadLabel, ccsLeaderLabel, ccsFocalLabel, ccsFastcomnsLabel, ccsTowerLabel);
+        configureEscalationHoverCopy("gim", gimHeadLabel, gimLeaderLabel, gimFocalLabel, gimFastcomnsLabel, gimTowerLabel);
+        configureEscalationHoverCopy("support", supportHeadLabel, supportLeaderLabel, supportFocalLabel, supportFastcomnsLabel, supportTowerLabel);
+        configureEscalationHoverCopy("application", applicationHeadLabel, applicationLeaderLabel, applicationFocalLabel, applicationFastcomnsLabel, applicationTowerLabel);
+        configureEscalationHoverCopy("engineering", engineeringHeadLabel, engineeringLeaderLabel, engineeringFocalLabel, engineeringFastcomnsLabel, engineeringTowerLabel);
+        configureServiceHoverCopy();
+    }
+
+    private void configureEscalationHoverCopy(
+            String cardKey,
+            Label headLabel,
+            Label leaderLabel,
+            Label focalLabel,
+            Label fastcomnsLabel,
+            Label towerLabel
+    ) {
+        configureHoverCopyMenu(
+                headLabel,
+                () -> List.of(
+                        new CopyOption("Copiar nome do Head", () -> resolveEscalationCopyValue(cardKey, "head", "name")),
+                        new CopyOption("Copiar ID do Head", () -> resolveEscalationCopyValue(cardKey, "head", "id")),
+                        new CopyOption("Copiar telefone do Head", () -> resolveEscalationCopyValue(cardKey, "head", "phone"))
+                )
+        );
+
+        configureHoverCopyMenu(
+                leaderLabel,
+                () -> List.of(
+                        new CopyOption("Copiar nome do Lider", () -> resolveEscalationCopyValue(cardKey, "leader", "name")),
+                        new CopyOption("Copiar ID do Lider", () -> resolveEscalationCopyValue(cardKey, "leader", "id")),
+                        new CopyOption("Copiar telefone do Lider", () -> resolveEscalationCopyValue(cardKey, "leader", "phone"))
+                )
+        );
+
+        configureHoverCopyMenu(
+                focalLabel,
+                () -> List.of(
+                        new CopyOption("Copiar nome do Ponto Focal", () -> resolveEscalationCopyValue(cardKey, "focal", "name")),
+                        new CopyOption("Copiar ID do Ponto Focal", () -> resolveEscalationCopyValue(cardKey, "focal", "id")),
+                        new CopyOption("Copiar telefone do Ponto Focal", () -> resolveEscalationCopyValue(cardKey, "focal", "phone"))
+                )
+        );
+
+        configureHoverCopyMenu(
+                fastcomnsLabel,
+                () -> List.of(
+                        new CopyOption("Copiar grupo Fastcomns", () -> resolveEscalationCopyValue(cardKey, "meta", "fastcomns"))
+                )
+        );
+
+        configureHoverCopyMenu(
+                towerLabel,
+                () -> List.of(
+                        new CopyOption("Copiar torre de atribuicao", () -> resolveEscalationCopyValue(cardKey, "meta", "tower"))
+                )
+        );
+    }
+
+    private void configureServiceHoverCopy() {
+        configureHoverCopyMenu(
+                serviceSpecialistLabel,
+                () -> List.of(
+                        new CopyOption("Copiar nome do Especialista", () -> resolveServiceCopyValue("specialist", "name")),
+                        new CopyOption("Copiar ID do Especialista", () -> resolveServiceCopyValue("specialist", "id")),
+                        new CopyOption("Copiar telefone do Especialista", () -> resolveServiceCopyValue("specialist", "phone"))
+                )
+        );
+
+        configureHoverCopyMenu(
+                serviceFastcomnsLabel,
+                () -> List.of(
+                        new CopyOption("Copiar grupo Fastcomns", () -> resolveServiceCopyValue("meta", "fastcomns"))
+                )
+        );
+
+        configureHoverCopyMenu(
+                serviceTowerLabel,
+                () -> List.of(
+                        new CopyOption("Copiar torre de atribuicao", () -> resolveServiceCopyValue("meta", "tower"))
+                )
+        );
+    }
+
+    private void configureHoverCopyMenu(Label label, Supplier<List<CopyOption>> optionsSupplier) {
+        label.getStyleClass().add("hover-copy-target");
+        label.setOnMouseEntered(event -> showHoverCopyMenu(label, optionsSupplier.get()));
+    }
+
+    private void showHoverCopyMenu(Label label, List<CopyOption> options) {
+        if (label.getScene() == null || options == null || options.isEmpty()) {
+            return;
+        }
+
+        if (activeHoverCopyMenu != null) {
+            activeHoverCopyMenu.hide();
+            activeHoverCopyMenu = null;
+        }
+
+        ContextMenu menu = new ContextMenu();
+        for (CopyOption option : options) {
+            String value = option.valueSupplier().get();
+            if (value == null || value.isBlank()) {
+                continue;
+            }
+
+            MenuItem item = new MenuItem(option.label());
+            item.setOnAction(event -> copyToClipboard(value));
+            menu.getItems().add(item);
+        }
+
+        if (menu.getItems().isEmpty()) {
+            return;
+        }
+
+        activeHoverCopyMenu = menu;
+        menu.setOnHidden(event -> {
+            if (activeHoverCopyMenu == menu) {
+                activeHoverCopyMenu = null;
+            }
+        });
+        menu.show(label, Side.RIGHT, 8.0, 0.0);
     }
 
     private void configureFlowAssistant() {
@@ -807,6 +1096,62 @@ public class CadastroMestreController implements Initializable {
         clipboard.setContent(content);
     }
 
+    private String resolveEscalationCopyValue(String cardKey, String roleKey, String fieldKey) {
+        EscalationContact contact = cardEscalationContacts.get(cardKey);
+        if (contact == null) {
+            return null;
+        }
+
+        if ("meta".equals(roleKey)) {
+            return switch (fieldKey) {
+                case "fastcomns" -> contact.fastcomnsGroup();
+                case "tower" -> contact.assignmentTower();
+                default -> null;
+            };
+        }
+
+        PersonContact person = switch (roleKey) {
+            case "head" -> contact.head();
+            case "leader" -> contact.leader();
+            case "focal" -> contact.pointOfContact();
+            default -> null;
+        };
+
+        return switch (fieldKey) {
+            case "name" -> person != null ? person.name() : null;
+            case "id" -> person != null ? person.employeeId() : null;
+            case "phone" -> person != null ? person.phone() : null;
+            default -> null;
+        };
+    }
+
+    private String resolveServiceCopyValue(String roleKey, String fieldKey) {
+        ServiceContact contact = cardServiceContacts.get("service");
+        if (contact == null) {
+            return null;
+        }
+
+        if ("meta".equals(roleKey)) {
+            return switch (fieldKey) {
+                case "fastcomns" -> contact.fastcomnsGroup();
+                case "tower" -> contact.assignmentTower();
+                default -> null;
+            };
+        }
+
+        if (!"specialist".equals(roleKey)) {
+            return null;
+        }
+
+        PersonContact specialist = contact.specialist();
+        return switch (fieldKey) {
+            case "name" -> specialist != null ? specialist.name() : null;
+            case "id" -> specialist != null ? specialist.employeeId() : null;
+            case "phone" -> specialist != null ? specialist.phone() : null;
+            default -> null;
+        };
+    }
+
     private <T> void toggleSelector(SelectorConfig<T> config) {
         if (config.panel.isVisible()) {
             closeSelector(config);
@@ -899,6 +1244,7 @@ public class CadastroMestreController implements Initializable {
     }
 
     private void updateEscalationLabels(
+            String cardKey,
             EscalationContact contact,
             Label headLabel,
             Label leaderLabel,
@@ -907,6 +1253,7 @@ public class CadastroMestreController implements Initializable {
             Label towerLabel
     ) {
         if (contact == null) {
+            cardEscalationContacts.remove(cardKey);
             headLabel.setText("Head: -");
             leaderLabel.setText("Lider: -");
             focalLabel.setText("Ponto focal: -");
@@ -915,6 +1262,7 @@ public class CadastroMestreController implements Initializable {
             return;
         }
 
+        cardEscalationContacts.put(cardKey, contact);
         headLabel.setText(formatPersonLine("Head", contact.head()));
         leaderLabel.setText(formatPersonLine("Lider", contact.leader()));
         focalLabel.setText(formatPersonLine("Ponto focal", contact.pointOfContact()));
@@ -924,6 +1272,7 @@ public class CadastroMestreController implements Initializable {
 
     private void updateServiceLabels(ServiceContact contact) {
         if (contact == null) {
+            cardServiceContacts.remove("service");
             serviceNameLabel.setText("Servico: -");
             serviceSpecialistLabel.setText("Especialista: -");
             serviceFastcomnsLabel.setText("Grupo Fastcomns: -");
@@ -932,11 +1281,24 @@ public class CadastroMestreController implements Initializable {
             return;
         }
 
+        cardServiceContacts.put("service", contact);
         serviceNameLabel.setText("Servico: " + contact.service());
         serviceSpecialistLabel.setText(formatPersonLine("Especialista", contact.specialist()));
         serviceFastcomnsLabel.setText("Grupo Fastcomns: " + contact.fastcomnsGroup());
         serviceTowerLabel.setText("Torre de atribuicao: " + contact.assignmentTower());
         serviceNotesLabel.setText("Observacao: " + contact.notes());
+    }
+
+    private String formatPersonSummary(PersonContact person) {
+        if (person == null) {
+            return "Nome: -  |  ID: -  |  Tel: -";
+        }
+        return String.format(
+                "Nome: %s  |  ID: %s  |  Tel: %s",
+                person.name(),
+                person.employeeId(),
+                person.phone()
+        );
     }
 
     private String formatPersonLine(String role, PersonContact person) {
@@ -952,6 +1314,8 @@ public class CadastroMestreController implements Initializable {
                 person.phone()
         );
     }
+
+    private record CopyOption(String label, Supplier<String> valueSupplier) {}
 
     private static final class SelectorConfig<T> {
         private final Button triggerButton;

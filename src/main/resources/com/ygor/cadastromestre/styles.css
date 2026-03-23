@@ -44,6 +44,20 @@
     -fx-background-color: #1e4fc4;
 }
 
+.top-action-btn {
+    -fx-background-color: #334155;
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-padding: 8 10 8 10;
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+}
+
+.top-action-btn:hover {
+    -fx-background-color: #1e293b;
+}
+
 .btn-sidebar-alt {
     -fx-background-color: transparent;
     -fx-text-fill: #cbd5e1;
@@ -61,6 +75,10 @@
     -fx-text-fill: #e2e8f0;
     -fx-font-size: 12px;
     -fx-font-weight: 600;
+}
+
+.country-center-wrap {
+    -fx-padding: 0 12 0 12;
 }
 
 .country-filter-box {
@@ -180,6 +198,19 @@
     -fx-border-color: transparent transparent transparent #cbd5e1;
     -fx-border-width: 0 0 0 2;
     -fx-text-fill: #334155;
+}
+
+.hover-copy-target {
+    -fx-cursor: hand;
+}
+
+.hover-copy-target:hover {
+    -fx-text-fill: #1d4ed8;
+    -fx-underline: true;
+}
+
+.consulta-dialog {
+    -fx-background-color: #f8fafc;
 }
 
 .selector-button {
